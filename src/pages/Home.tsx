@@ -4,6 +4,14 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 
 export const Home = () => {
+  // Time-aware greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 4 && hour < 12) return "Good morning ☀️";
+    if (hour >= 12 && hour < 18) return "Good afternoon 🌤️";
+    return "Good evening 🌙";
+  };
+
   // Mock data - will be replaced with actual state management
   const streakData = {
     global: 12,
@@ -28,7 +36,7 @@ export const Home = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Good morning! 🌅</h1>
+          <h1 className="text-2xl font-bold text-foreground">{getGreeting()}</h1>
           <p className="text-muted-foreground">Let's crush today's goals</p>
         </div>
         <div className="flex items-center gap-2">
