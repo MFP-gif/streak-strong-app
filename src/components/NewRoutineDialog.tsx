@@ -16,6 +16,7 @@ interface Exercise {
 interface RoutineExercise extends Exercise {
   sets: number;
   reps: number;
+  weight: number;
 }
 
 interface NewRoutineDialogProps {
@@ -33,7 +34,8 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
     const routineExercise: RoutineExercise = {
       ...exercise,
       sets: 3,
-      reps: 10
+      reps: 10,
+      weight: 0
     };
     setExercises([...exercises, routineExercise]);
   };
@@ -51,6 +53,12 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
   const handleUpdateReps = (exerciseId: number, reps: number) => {
     setExercises(exercises.map(ex => 
       ex.id === exerciseId ? { ...ex, reps } : ex
+    ));
+  };
+
+  const handleUpdateWeight = (exerciseId: number, weight: number) => {
+    setExercises(exercises.map(ex => 
+      ex.id === exerciseId ? { ...ex, weight } : ex
     ));
   };
 
@@ -131,6 +139,18 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
                             className="w-12 h-8 text-xs text-center"
                           />
                           <span className="text-xs text-muted-foreground">sets</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1">
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.5"
+                            value={exercise.weight}
+                            onChange={(e) => handleUpdateWeight(exercise.id, parseFloat(e.target.value) || 0)}
+                            className="w-16 h-8 text-xs text-center"
+                          />
+                          <span className="text-xs text-muted-foreground">kg</span>
                         </div>
                         
                         <div className="flex items-center gap-1">

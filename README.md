@@ -5,9 +5,30 @@ A mobile-first Progressive Web App for fitness & self-discipline tracking.
 ## Features
 
 ### Workout
-- **Routine Management**: Create custom workout routines with exercises, sets, and reps
+- **Routine Management**: Create custom workout routines with exercises, sets, reps, and weights
 - **Exercise Library**: Search and select from a curated exercise database  
+- **Workout Sessions**: Live workout tracking with timer, volume calculation, and progress monitoring
 - **Persistence**: Routines are stored in localStorage; see `/src/features/workout/storage.ts`
+
+Workout sessions track exercise progress with live stats (duration, volume, sets completed). Session data is stored in localStorage with the following structure:
+
+```typescript
+{
+  id: string,
+  routineId: string,
+  routineName: string,
+  date: string,
+  volume: number,    // Total weight × reps for completed sets
+  duration: number,  // Workout duration in seconds
+  setsCompleted: number,
+  totalSets: number,
+  exercises: [{
+    name: string,
+    notes: string,
+    sets: [{ weight: number, reps: number, completed: boolean }]
+  }]
+}
+```
 
 ## Project info
 

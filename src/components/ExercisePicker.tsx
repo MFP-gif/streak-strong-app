@@ -33,12 +33,12 @@ export const ExercisePicker = ({ open, onClose, onSelectExercise }: ExercisePick
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-auto">
+      <DialogContent className="max-w-lg mx-auto max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>Choose Exercise</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4">
+        <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
             <Input
@@ -49,7 +49,7 @@ export const ExercisePicker = ({ open, onClose, onSelectExercise }: ExercisePick
             />
           </div>
 
-          <div className="max-h-64 overflow-y-auto space-y-2">
+          <div className="flex-1 overflow-y-auto space-y-2">
             {filteredExercises.map((exercise) => (
               <div
                 key={exercise.id}

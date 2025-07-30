@@ -161,7 +161,11 @@ export const Workout = () => {
                   <span className="text-sm text-muted-foreground">
                     Last: {routine.lastPerformed}
                   </span>
-                  <Button size="sm" className="btn-mobile gap-2">
+                  <Button 
+                    size="sm" 
+                    className="btn-mobile gap-2"
+                    onClick={() => window.location.href = `/workout/${routine.id}/session`}
+                  >
                     <Play size={14} />
                     Start
                   </Button>
