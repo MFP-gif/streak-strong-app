@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Plus, Play, Clock, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { NewRoutineDialog } from "@/components/NewRoutineDialog";
 
 export const Workout = () => {
+  const [showNewRoutine, setShowNewRoutine] = useState(false);
+  
   // Mock data - will be replaced with actual state management
   const workoutRoutines = [
     {
@@ -35,6 +39,11 @@ export const Workout = () => {
     { date: "4 days ago", routine: "Pull Day", duration: "45 min" }
   ];
 
+  const handleSaveRoutine = (routine: { name: string; exercises: any[] }) => {
+    console.log("Saving routine:", routine);
+    // TODO: Save to state/database
+  };
+
   return (
     <div className="min-h-screen bg-background pb-20 pt-4 px-4">
       {/* Header */}
@@ -43,7 +52,11 @@ export const Workout = () => {
           <h1 className="text-2xl font-bold text-foreground">Workouts</h1>
           <p className="text-muted-foreground">Choose your routine</p>
         </div>
-        <Button size="sm" className="btn-mobile gap-2">
+        <Button 
+          size="sm" 
+          className="btn-mobile gap-2"
+          onClick={() => setShowNewRoutine(true)}
+        >
           <Plus size={16} />
           New Routine
         </Button>
@@ -119,6 +132,12 @@ export const Workout = () => {
           ))}
         </CardContent>
       </Card>
+
+      <NewRoutineDialog
+        open={showNewRoutine}
+        onClose={() => setShowNewRoutine(false)}
+        onSave={handleSaveRoutine}
+      />
     </div>
   );
 };

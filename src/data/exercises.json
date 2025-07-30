@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "Bench Press",
+    "muscle": "Chest"
+  },
+  {
+    "id": 2,
+    "name": "Squat",
+    "muscle": "Legs"
+  },
+  {
+    "id": 3,
+    "name": "Deadlift",
+    "muscle": "Back"
+  },
+  {
+    "id": 4,
+    "name": "Overhead Press",
+    "muscle": "Shoulders"
+  },
+  {
+    "id": 5,
+    "name": "Pull-ups",
+    "muscle": "Back"
+  },
+  {
+    "id": 6,
+    "name": "Dips",
+    "muscle": "Chest"
+  },
+  {
+    "id": 7,
+    "name": "Rows",
+    "muscle": "Back"
+  },
+  {
+    "id": 8,
+    "name": "Bicep Curls",
+    "muscle": "Arms"
+  },
+  {
+    "id": 9,
+    "name": "Lunges",
+    "muscle": "Legs"
+  },
+  {
+    "id": 10,
+    "name": "Push-ups",
+    "muscle": "Chest"
+  },
+  {
+    "id": 11,
+    "name": "Tricep Extensions",
+    "muscle": "Arms"
+  },
+  {
+    "id": 12,
+    "name": "Leg Press",
+    "muscle": "Legs"
+  },
+  {
+    "id": 13,
+    "name": "Lat Pulldown",
+    "muscle": "Back"
+  },
+  {
+    "id": 14,
+    "name": "Shoulder Shrugs",
+    "muscle": "Shoulders"
+  },
+  {
+    "id": 15,
+    "name": "Leg Curls",
+    "muscle": "Legs"
+  },
+  {
+    "id": 16,
+    "name": "Calf Raises",
+    "muscle": "Legs"
+  },
+  {
+    "id": 17,
+    "name": "Chest Flys",
+    "muscle": "Chest"
+  },
+  {
+    "id": 18,
+    "name": "Face Pulls",
+    "muscle": "Shoulders"
+  },
+  {
+    "id": 19,
+    "name": "Hip Thrusts",
+    "muscle": "Legs"
+  },
+  {
+    "id": 20,
+    "name": "Plank",
+    "muscle": "Core"
+  }
+]
