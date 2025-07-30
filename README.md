@@ -1,4 +1,13 @@
-# Welcome to your Lovable project
+# Discipra PWA
+
+A mobile-first Progressive Web App for fitness & self-discipline tracking.
+
+## Features
+
+### Workout
+- **Routine Management**: Create custom workout routines with exercises, sets, and reps
+- **Exercise Library**: Search and select from a curated exercise database  
+- **Persistence**: Routines are stored in localStorage; see `/src/features/workout/storage.ts`
 
 ## Project info
 

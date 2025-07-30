@@ -1,36 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Play, Clock, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { NewRoutineDialog } from "@/components/NewRoutineDialog";
+import { getRoutines, saveRoutine, WorkoutRoutine } from "@/features/workout/storage";
+import { useToast } from "@/hooks/use-toast";
 
 export const Workout = () => {
   const [showNewRoutine, setShowNewRoutine] = useState(false);
-  
-  // Mock data - will be replaced with actual state management
-  const workoutRoutines = [
+  const [routines, setRoutines] = useState<WorkoutRoutine[]>([]);
+  const { toast } = useToast();
+
+  // Load routines from localStorage on mount
+  useEffect(() => {
+    setRoutines(getRoutines());
+  }, []);
+
+  // Legacy mock data for display purposes
+  const mockWorkoutRoutines = [
     {
-      id: 1,
+      id: "mock-1",
       name: "Push Day",
       exercises: ["Bench Press", "Overhead Press", "Dips"],
       duration: "45 min",
       lastPerformed: "2 days ago"
     },
     {
-      id: 2,
+      id: "mock-2",
       name: "Pull Day", 
       exercises: ["Pull-ups", "Rows", "Bicep Curls"],
       duration: "40 min",
       lastPerformed: "3 days ago"
     },
     {
-      id: 3,
+      id: "mock-3",
       name: "Leg Day",
       exercises: ["Squats", "Deadlifts", "Lunges"],
       duration: "50 min", 
       lastPerformed: "1 week ago"
     }
+  ];
+
+  // Combine real routines with mock data for now
+  const displayRoutines = [
+    ...routines.map(routine => ({
+      id: routine.id,
+      name: routine.name,
+      exercises: routine.exercises.map(ex => ex.name),
+      duration: `${routine.exercises.length * 5} min`, // Estimate based on exercise count
+      lastPerformed: "Never"
+    })),
+    ...mockWorkoutRoutines
   ];
 
   const recentWorkouts = [
@@ -39,9 +60,48 @@ export const Workout = () => {
     { date: "4 days ago", routine: "Pull Day", duration: "45 min" }
   ];
 
-  const handleSaveRoutine = (routine: { name: string; exercises: any[] }) => {
-    console.log("Saving routine:", routine);
-    // TODO: Save to state/database
+  const handleSaveRoutine = (routineData: { name: string; exercises: any[] }) => {
+    try {
+      // Validation
+      if (!routineData.name.trim()) {
+        toast({
+          title: "Error",
+          description: "Routine name cannot be blank",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      if (routineData.exercises.length === 0) {
+        toast({
+          title: "Error", 
+          description: "At least one exercise is required",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Save to localStorage
+      const savedRoutine = saveRoutine(routineData.name, routineData.exercises);
+      
+      // Refresh the list
+      setRoutines(getRoutines());
+      
+      // Show success toast
+      toast({
+        title: "Routine saved ✅",
+        description: `"${savedRoutine.name}" has been added to your routines`,
+        variant: "default"
+      });
+
+      setShowNewRoutine(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save routine. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -78,7 +138,7 @@ export const Workout = () => {
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-4">Your Routines</h2>
         <div className="space-y-3">
-          {workoutRoutines.map((routine) => (
+          {displayRoutines.map((routine) => (
             <Card key={routine.id} className="mobile-card">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-3">

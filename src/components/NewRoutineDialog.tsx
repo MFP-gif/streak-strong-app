@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { saveRoutine } from "@/features/workout/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -56,7 +57,7 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
   const handleSave = () => {
     if (routineName.trim() && exercises.length > 0) {
       onSave({ name: routineName.trim(), exercises });
-      handleClose();
+      // handleClose() will be called by parent after successful save
     }
   };
 
@@ -139,7 +140,7 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
                             max="100"
                             value={exercise.reps}
                             onChange={(e) => handleUpdateReps(exercise.id, parseInt(e.target.value) || 1)}
-                            className="w-12 h-8 text-xs text-center"
+                            className="w-16 h-8 text-xs text-center"
                           />
                           <span className="text-xs text-muted-foreground">reps</span>
                         </div>
