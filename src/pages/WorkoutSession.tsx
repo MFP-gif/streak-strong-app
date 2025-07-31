@@ -353,7 +353,7 @@ export const WorkoutSession = () => {
                         </div>
                         
                          <div className="text-center text-xs text-muted-foreground">
-                           {getPreviousSet(exercise.exerciseId)}
+                           {getPreviousSet(exercise.exerciseId, exercise.name)}
                          </div>
                         
                          <Input

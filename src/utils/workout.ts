@@ -39,26 +39,21 @@ export const formatDuration = (milliseconds: number): string => {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
-export const getPreviousSet = (exerciseId: number): string => {
+export const getPreviousSet = (exerciseId: number, exerciseName: string): string => {
   try {
     const sessions: SessionData[] = JSON.parse(localStorage.getItem("sessions") || "[]");
     
-    // Find the most recent session that has this exercise with completed sets
-    const relevantSessions = sessions
-      .filter(session => 
-        session.exercises.some(ex => 
-          ex.name && ex.sets.some(set => set.completed)
-        )
-      )
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // Sort sessions by date (most recent first)
+    const sortedSessions = sessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-    for (const session of relevantSessions) {
-      const exercise = session.exercises.find(ex => ex.name);
+    // Find the most recent session that has this specific exercise with completed sets
+    for (const session of sortedSessions) {
+      const exercise = session.exercises.find(ex => ex.name === exerciseName);
       if (exercise) {
         const completedSets = exercise.sets.filter(set => set.completed);
         if (completedSets.length > 0) {
           const lastSet = completedSets[completedSets.length - 1];
-          return `${lastSet.weight}×${lastSet.reps}`;
+          return `${lastSet.weight} kg × ${lastSet.reps}`;
         }
       }
     }

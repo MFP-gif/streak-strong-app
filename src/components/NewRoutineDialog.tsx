@@ -81,7 +81,7 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
   return (
     <>
       <Dialog open={open} onOpenChange={handleClose}>
-        <DialogContent className="w-[560px] max-w-[95vw] sm:max-w-[560px] max-h-[90vh] overflow-hidden flex flex-col sm:rounded-lg rounded-t-2xl sm:h-auto h-[90vh]">
+        <DialogContent className="w-[640px] max-w-[95vw] sm:max-w-[640px] max-h-[90vh] overflow-hidden flex flex-col sm:rounded-lg rounded-t-2xl sm:h-auto h-[90vh]">
           <DialogHeader>
             <DialogTitle>New Routine</DialogTitle>
           </DialogHeader>
@@ -136,7 +136,7 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
                             max="20"
                             value={exercise.sets}
                             onChange={(e) => handleUpdateSets(exercise.id, parseInt(e.target.value) || 1)}
-                            className="w-12 h-8 text-xs text-center"
+                            className="w-16 h-8 text-xs text-center"
                           />
                           <span className="text-xs text-muted-foreground">sets</span>
                         </div>
