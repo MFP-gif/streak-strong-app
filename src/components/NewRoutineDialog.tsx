@@ -16,7 +16,7 @@ interface Exercise {
 interface RoutineExercise extends Exercise {
   sets: number;
   reps: number;
-  weight: number;
+  weight: number | null;
 }
 
 interface NewRoutineDialogProps {
@@ -35,7 +35,7 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
       ...exercise,
       sets: 3,
       reps: 10,
-      weight: 0
+      weight: null
     };
     setExercises([...exercises, routineExercise]);
   };
@@ -56,7 +56,7 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
     ));
   };
 
-  const handleUpdateWeight = (exerciseId: number, weight: number) => {
+  const handleUpdateWeight = (exerciseId: number, weight: number | null) => {
     setExercises(exercises.map(ex => 
       ex.id === exerciseId ? { ...ex, weight } : ex
     ));
@@ -81,7 +81,7 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
   return (
     <>
       <Dialog open={open} onOpenChange={handleClose}>
-        <DialogContent className="max-w-md mx-auto max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent className="w-[560px] max-w-[95vw] sm:max-w-[560px] max-h-[90vh] overflow-hidden flex flex-col sm:rounded-lg rounded-t-2xl sm:h-auto h-[90vh]">
           <DialogHeader>
             <DialogTitle>New Routine</DialogTitle>
           </DialogHeader>
@@ -141,29 +141,33 @@ export const NewRoutineDialog = ({ open, onClose, onSave }: NewRoutineDialogProp
                           <span className="text-xs text-muted-foreground">sets</span>
                         </div>
                         
-                        <div className="flex items-center gap-1">
-                          <Input
-                            type="number"
-                            min="0"
-                            step="0.5"
-                            value={exercise.weight}
-                            onChange={(e) => handleUpdateWeight(exercise.id, parseFloat(e.target.value) || 0)}
-                            className="w-16 h-8 text-xs text-center"
-                          />
-                          <span className="text-xs text-muted-foreground">kg</span>
-                        </div>
-                        
-                        <div className="flex items-center gap-1">
-                          <Input
-                            type="number"
-                            min="1"
-                            max="100"
-                            value={exercise.reps}
-                            onChange={(e) => handleUpdateReps(exercise.id, parseInt(e.target.value) || 1)}
-                            className="w-16 h-8 text-xs text-center"
-                          />
-                          <span className="text-xs text-muted-foreground">reps</span>
-                        </div>
+                         <div className="flex items-center gap-1">
+                           <Input
+                             type="number"
+                             inputMode="decimal"
+                             min="0"
+                             step="0.5"
+                             value={exercise.weight ?? ""}
+                             placeholder="—"
+                             onChange={(e) => handleUpdateWeight(exercise.id, e.target.value === "" ? null : parseFloat(e.target.value) || null)}
+                             className="w-16 h-8 text-xs text-center"
+                           />
+                           <span className="text-xs text-muted-foreground">kg</span>
+                         </div>
+                         
+                         <div className="flex items-center gap-1">
+                           <Input
+                             type="number"
+                             inputMode="numeric"
+                             min="1"
+                             max="100"
+                             value={exercise.reps}
+                             placeholder="—"
+                             onChange={(e) => handleUpdateReps(exercise.id, parseInt(e.target.value) || 1)}
+                             className="w-20 h-8 text-xs text-center"
+                           />
+                           <span className="text-xs text-muted-foreground">reps</span>
+                         </div>
                         
                         <Button
                           variant="ghost"

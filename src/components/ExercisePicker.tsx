@@ -33,7 +33,7 @@ export const ExercisePicker = ({ open, onClose, onSelectExercise }: ExercisePick
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg mx-auto max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="w-[560px] max-w-[95vw] sm:max-w-[560px] max-h-[90vh] overflow-hidden flex flex-col sm:rounded-lg rounded-t-2xl sm:h-auto h-[90vh]">
         <DialogHeader>
           <DialogTitle>Choose Exercise</DialogTitle>
         </DialogHeader>

@@ -6,7 +6,7 @@ export interface RoutineExercise {
   muscle: string;
   sets: number;
   reps: number;
-  weight: number;
+  weight: number | null;
 }
 
 export interface WorkoutRoutine {

@@ -8,12 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { getRoutines, WorkoutRoutine } from "@/features/workout/storage";
-import { calculateVolume, formatDuration } from "@/utils/workout";
+import { calculateVolume, formatDuration, getPreviousSet } from "@/utils/workout";
 import { useToast } from "@/hooks/use-toast";
 
 interface SessionSet {
   id: string;
-  weight: number;
+  weight: number | null;
   reps: number;
   completed: boolean;
 }
@@ -67,7 +67,7 @@ export const WorkoutSession = () => {
           isOpen: true,
           sets: Array.from({ length: ex.sets }, (_, index) => ({
             id: `${ex.id}-${index}`,
-            weight: ex.weight || 0,
+            weight: ex.weight,
             reps: ex.reps,
             completed: false
           }))
@@ -85,7 +85,7 @@ export const WorkoutSession = () => {
     }
   }, [id, navigate, toast]);
 
-  const updateSetValue = (exerciseId: number, setId: string, field: 'weight' | 'reps', value: number) => {
+  const updateSetValue = (exerciseId: number, setId: string, field: 'weight' | 'reps', value: number | null) => {
     setExercises(prev => prev.map(ex => 
       ex.exerciseId === exerciseId 
         ? {
@@ -124,7 +124,7 @@ export const WorkoutSession = () => {
               ...ex.sets,
               {
                 id: `${exerciseId}-${ex.sets.length}`,
-                weight: ex.sets[ex.sets.length - 1]?.weight || 0,
+                weight: ex.sets[ex.sets.length - 1]?.weight || null,
                 reps: ex.sets[ex.sets.length - 1]?.reps || 10,
                 completed: false
               }
@@ -156,7 +156,10 @@ export const WorkoutSession = () => {
     const totalSets = exercises.reduce((total, ex) => total + ex.sets.length, 0);
     
     const volume = calculateVolume(exercises.flatMap(ex => 
-      ex.sets.filter(set => set.completed)
+      ex.sets.filter(set => set.completed && set.weight !== null).map(set => ({
+        weight: set.weight as number,
+        reps: set.reps
+      }))
     ));
     
     const duration = Math.floor((currentTime.getTime() - startTime.getTime()) / 1000);
@@ -175,7 +178,7 @@ export const WorkoutSession = () => {
         name: ex.name,
         notes: ex.notes,
         sets: ex.sets.map(set => ({
-          weight: set.weight,
+          weight: set.weight || 0,
           reps: set.reps,
           completed: set.completed
         }))
@@ -217,7 +220,10 @@ export const WorkoutSession = () => {
   const totalSets = exercises.reduce((total, ex) => total + ex.sets.length, 0);
   
   const volume = calculateVolume(exercises.flatMap(ex => 
-    ex.sets.filter(set => set.completed)
+    ex.sets.filter(set => set.completed && set.weight !== null).map(set => ({
+      weight: set.weight as number,
+      reps: set.reps
+    }))
   ));
 
   return (
@@ -346,26 +352,30 @@ export const WorkoutSession = () => {
                           {index + 1}
                         </div>
                         
-                        <div className="text-center text-xs text-muted-foreground">
-                          -
-                        </div>
+                         <div className="text-center text-xs text-muted-foreground">
+                           {getPreviousSet(exercise.exerciseId)}
+                         </div>
                         
-                        <Input
-                          type="number"
-                          value={set.weight}
-                          onChange={(e) => updateSetValue(exercise.exerciseId, set.id, 'weight', parseFloat(e.target.value) || 0)}
-                          className="h-8 text-center text-sm"
-                          min="0"
-                          step="0.5"
-                        />
-                        
-                        <Input
-                          type="number"
-                          value={set.reps}
-                          onChange={(e) => updateSetValue(exercise.exerciseId, set.id, 'reps', parseInt(e.target.value) || 0)}
-                          className="h-8 text-center text-sm"
-                          min="0"
-                        />
+                         <Input
+                           type="number"
+                           inputMode="decimal"
+                           value={set.weight ?? ""}
+                           placeholder="—"
+                           onChange={(e) => updateSetValue(exercise.exerciseId, set.id, 'weight', e.target.value === "" ? null : parseFloat(e.target.value) || null)}
+                           className="h-8 text-center text-sm"
+                           min="0"
+                           step="0.5"
+                         />
+                         
+                         <Input
+                           type="number"
+                           inputMode="numeric"
+                           value={set.reps}
+                           placeholder="—"
+                           onChange={(e) => updateSetValue(exercise.exerciseId, set.id, 'reps', parseInt(e.target.value) || 0)}
+                           className="h-8 text-center text-sm"
+                           min="0"
+                         />
                         
                         <div className="flex justify-center">
                           <Checkbox
