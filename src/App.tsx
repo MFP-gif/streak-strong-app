@@ -11,6 +11,7 @@ import { Nutrition } from "./pages/Nutrition";
 import { Habits } from "./pages/Habits";
 import { Profile } from "./pages/Profile";
 import { Onboarding } from "./pages/Onboarding";
+import { SessionSummary } from "./pages/SessionSummary";
 import { MobileNavigation } from "./components/MobileNavigation";
 import { useEffect, useState } from "react";
 import NotFound from "./pages/NotFound";
@@ -51,6 +52,7 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/workout" element={<Workout />} />
                 <Route path="/workout/quick" element={<QuickWorkoutSession />} />
+                <Route path="/history/:sessionId" element={<SessionSummary />} />
                 <Route path="/workout/:id/session" element={<WorkoutSession />} />
                 <Route path="/nutrition" element={<Nutrition />} />
                 <Route path="/habits" element={<Habits />} />
