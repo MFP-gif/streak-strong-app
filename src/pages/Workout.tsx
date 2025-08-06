@@ -20,42 +20,29 @@ export const Workout = () => {
     setRoutines(getRoutines());
   }, []);
 
-  // Legacy mock data for display purposes
-  const mockWorkoutRoutines = [
-    {
-      id: "mock-1",
-      name: "Push Day",
-      exercises: ["Bench Press", "Overhead Press", "Dips"],
-      duration: "45 min",
-      lastPerformed: "2 days ago"
-    },
-    {
-      id: "mock-2",
-      name: "Pull Day", 
-      exercises: ["Pull-ups", "Rows", "Bicep Curls"],
-      duration: "40 min",
-      lastPerformed: "3 days ago"
-    },
-    {
-      id: "mock-3",
-      name: "Leg Day",
-      exercises: ["Squats", "Deadlifts", "Lunges"],
-      duration: "50 min", 
-      lastPerformed: "1 week ago"
+  // Clear any legacy demo routines on first load
+  useEffect(() => {
+    const routines = getRoutines();
+    const legacyRoutineNames = ["Push Day", "Pull Day", "Leg Day"];
+    const hasLegacyRoutines = routines.some(routine => 
+      legacyRoutineNames.includes(routine.name)
+    );
+    
+    if (hasLegacyRoutines) {
+      // Clear all routines to remove legacy ones
+      localStorage.removeItem("routines");
+      setRoutines([]);
     }
-  ];
+  }, []);
 
-  // Combine real routines with mock data for now
-  const displayRoutines = [
-    ...routines.map(routine => ({
-      id: routine.id,
-      name: routine.name,
-      exercises: routine.exercises.map(ex => ex.name),
-      duration: `${routine.exercises.length * 5} min`, // Estimate based on exercise count
-      lastPerformed: "Never"
-    })),
-    ...mockWorkoutRoutines
-  ];
+  // Display only real user routines
+  const displayRoutines = routines.map(routine => ({
+    id: routine.id,
+    name: routine.name,
+    exercises: routine.exercises.map(ex => ex.name),
+    duration: `${routine.exercises.length * 5} min`, // Estimate based on exercise count
+    lastPerformed: "Never"
+  }));
 
   const recentWorkouts = [
     { date: "Today", routine: "Push Day", duration: "42 min" },
@@ -152,7 +139,11 @@ export const Workout = () => {
         <CardContent className="p-4 text-center">
           <h3 className="font-bold text-lg mb-2">Ready to train?</h3>
           <p className="text-sm opacity-90 mb-4">Start a quick workout or choose a routine</p>
-          <Button variant="secondary" className="btn-mobile gap-2">
+          <Button 
+            variant="secondary" 
+            className="btn-mobile gap-2"
+            onClick={() => navigate("/workout/quick")}
+          >
             <Play size={16} />
             Quick Start
           </Button>
@@ -187,37 +178,35 @@ export const Workout = () => {
                     Last: {routine.lastPerformed}
                   </span>
                   <div className="flex items-center gap-2">
-                    {/* Only show delete for real routines, not mock data */}
-                    {routines.some(r => r.id === routine.id) && (
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                    {/* Show delete for all routines */}
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 size={14} />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete routine</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Delete routine "{routine.name}"? This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={() => handleDeleteRoutine(routine.id, routine.name)}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                           >
-                            <Trash2 size={14} />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Delete routine</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Delete routine "{routine.name}"? This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction 
-                              onClick={() => handleDeleteRoutine(routine.id, routine.name)}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            >
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    )}
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                     <Button 
                       size="sm" 
                       className="btn-mobile gap-2"

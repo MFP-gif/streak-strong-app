@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Workout } from "./pages/Workout";
 import { WorkoutSession } from "./pages/WorkoutSession";
+import { QuickWorkoutSession } from "./pages/QuickWorkoutSession";
 import { Nutrition } from "./pages/Nutrition";
 import { Habits } from "./pages/Habits";
 import { Profile } from "./pages/Profile";
@@ -49,6 +50,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/workout" element={<Workout />} />
+                <Route path="/workout/quick" element={<QuickWorkoutSession />} />
                 <Route path="/workout/:id/session" element={<WorkoutSession />} />
                 <Route path="/nutrition" element={<Nutrition />} />
                 <Route path="/habits" element={<Habits />} />
