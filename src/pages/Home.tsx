@@ -20,16 +20,21 @@ export const Home = () => {
     habits: 12
   };
 
+  // Load data from localStorage with defaults
+  const caloriesData = JSON.parse(localStorage.getItem('calories') || '{"consumed": 0, "target": 0}');
+  const habitsData = JSON.parse(localStorage.getItem('habits') || '{"completed": 0, "target": 0}');
+  
   const todayData = {
-    caloriesConsumed: 1850,
-    caloriesTarget: 2200,
+    caloriesConsumed: caloriesData.consumed,
+    caloriesTarget: caloriesData.target || 2200, // Default target if 0
     workoutCompleted: false,
-    habitsCompleted: 3,
-    habitsTotal: 5
+    workoutName: "None yet", // Will be updated when workout is completed
+    habitsCompleted: habitsData.completed,
+    habitsTotal: habitsData.target || 5 // Default target if 0
   };
 
-  const calorieProgress = (todayData.caloriesConsumed / todayData.caloriesTarget) * 100;
-  const habitProgress = (todayData.habitsCompleted / todayData.habitsTotal) * 100;
+  const calorieProgress = todayData.caloriesTarget > 0 ? (todayData.caloriesConsumed / todayData.caloriesTarget) * 100 : 0;
+  const habitProgress = todayData.habitsTotal > 0 ? (todayData.habitsCompleted / todayData.habitsTotal) * 100 : 0;
 
   return (
     <div className="min-h-screen bg-background pb-20 pt-4 px-4">
@@ -80,11 +85,9 @@ export const Home = () => {
           <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
             <span className="text-sm font-medium">Today's Workout</span>
             {todayData.workoutCompleted ? (
-              <span className="text-success text-sm font-medium">✅ Complete</span>
+              <span className="text-success text-sm font-medium">✅ {todayData.workoutName}</span>
             ) : (
-              <Button size="sm" className="btn-mobile h-8">
-                Start Now
-              </Button>
+              <span className="text-sm text-muted-foreground">{todayData.workoutName}</span>
             )}
           </div>
         </CardContent>

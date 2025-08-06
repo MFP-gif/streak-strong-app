@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, Play, Clock, TrendingUp, Trash2 } from "lucide-react";
+import { Plus, Play, Clock, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -44,11 +44,6 @@ export const Workout = () => {
     lastPerformed: "Never"
   }));
 
-  const recentWorkouts = [
-    { date: "Today", routine: "Push Day", duration: "42 min" },
-    { date: "2 days ago", routine: "Full Body", duration: "38 min" },
-    { date: "4 days ago", routine: "Pull Day", duration: "45 min" }
-  ];
 
   const handleSaveRoutine = (routineData: { name: string; exercises: any[] }) => {
     try {
@@ -223,26 +218,6 @@ export const Workout = () => {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <Card className="mobile-card">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <TrendingUp size={20} />
-            Recent Activity
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {recentWorkouts.map((workout, index) => (
-            <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-              <div>
-                <div className="font-medium text-sm">{workout.routine}</div>
-                <div className="text-xs text-muted-foreground">{workout.date}</div>
-              </div>
-              <div className="text-sm text-muted-foreground">{workout.duration}</div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
 
       <NewRoutineDialog
         open={showNewRoutine}
