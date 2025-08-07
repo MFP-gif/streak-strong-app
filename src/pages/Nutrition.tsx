@@ -1,182 +1,202 @@
-import { Plus, Target, TrendingUp, Coffee, Apple, Utensils } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Apple, Plus, TrendingUp, Calendar, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { dateKey, formatTime } from "@/utils/date";
+import { weeklyCalories } from "@/utils/stats";
+import type { CaloriesByDate, MealEntry } from "@/types";
 
 export const Nutrition = () => {
-  // Mock data - will be replaced with actual state management
-  const dailyTargets = {
-    calories: 2200,
-    protein: 150,
-    carbs: 275,
-    fat: 73
+  const { toast } = useToast();
+  const [caloriesByDate, setCaloriesByDate] = useState<CaloriesByDate>({});
+  const [isAddMealOpen, setIsAddMealOpen] = useState(false);
+  const [mealForm, setMealForm] = useState({
+    type: 'breakfast' as MealEntry['type'],
+    name: '',
+    calories: '',
+    time: new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
+  });
+
+  const today = dateKey();
+  const todayMeals = caloriesByDate[today]?.byMeal || [];
+  const todayCalories = caloriesByDate[today]?.total || 0;
+  const calorieTarget = 2200;
+
+  const loadData = () => {
+    const data: CaloriesByDate = JSON.parse(localStorage.getItem('caloriesByDate') || '{}');
+    setCaloriesByDate(data);
   };
 
-  const consumed = {
-    calories: 1650,
-    protein: 110,
-    carbs: 180,
-    fat: 58
-  };
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const meals = [
-    {
-      id: 1,
-      name: "Breakfast",
-      time: "8:30 AM",
-      calories: 420,
-      items: ["Oatmeal with berries", "Greek yogurt", "Coffee"]
-    },
-    {
-      id: 2,
-      name: "Lunch", 
-      time: "12:45 PM",
-      calories: 680,
-      items: ["Grilled chicken salad", "Brown rice", "Avocado"]
-    },
-    {
-      id: 3,
-      name: "Snack",
-      time: "3:30 PM",
-      calories: 220,
-      items: ["Protein shake", "Banana"]
-    },
-    {
-      id: 4,
-      name: "Dinner",
-      time: "7:00 PM",
-      calories: 330,
-      items: ["Salmon", "Steamed vegetables", "Quinoa"]
+  const handleAddMeal = () => {
+    if (!mealForm.name.trim() || !mealForm.calories) return;
+
+    const newMeal: MealEntry = {
+      type: mealForm.type,
+      name: mealForm.name.trim(),
+      calories: parseInt(mealForm.calories),
+      time: new Date().toISOString()
+    };
+
+    const updatedData = { ...caloriesByDate };
+    if (!updatedData[today]) {
+      updatedData[today] = { total: 0, byMeal: [] };
     }
-  ];
+    
+    updatedData[today].byMeal.push(newMeal);
+    updatedData[today].total += newMeal.calories;
 
-  const calorieProgress = (consumed.calories / dailyTargets.calories) * 100;
-  const proteinProgress = (consumed.protein / dailyTargets.protein) * 100;
-  const carbProgress = (consumed.carbs / dailyTargets.carbs) * 100;
-  const fatProgress = (consumed.fat / dailyTargets.fat) * 100;
+    setCaloriesByDate(updatedData);
+    localStorage.setItem('caloriesByDate', JSON.stringify(updatedData));
 
-  const getMealIcon = (mealName: string) => {
-    switch (mealName.toLowerCase()) {
-      case 'breakfast': return Coffee;
-      case 'lunch': return Utensils;
-      case 'dinner': return Utensils;
-      default: return Apple;
+    toast({
+      title: "Meal added",
+      description: `${newMeal.name} logged with ${newMeal.calories} calories`,
+    });
+
+    setMealForm({
+      type: 'breakfast',
+      name: '',
+      calories: '',
+      time: new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' })
+    });
+    setIsAddMealOpen(false);
+  };
+
+  const getMealIcon = (mealType: string) => {
+    switch (mealType) {
+      case 'breakfast': return '🍳';
+      case 'lunch': return '🥗';
+      case 'dinner': return '🍽️';
+      case 'snack': return '🍎';
+      case 'drink': return '🥤';
+      default: return '🍴';
     }
   };
+
+  const calorieProgress = calorieTarget > 0 ? (todayCalories / calorieTarget) * 100 : 0;
+  const weeklyStats = weeklyCalories(caloriesByDate);
 
   return (
     <div className="min-h-screen bg-background pb-20 pt-4 px-4">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Nutrition</h1>
           <p className="text-muted-foreground">Track your daily intake</p>
         </div>
-        <Button size="sm" className="btn-mobile gap-2">
-          <Plus size={16} />
-          Add Food
-        </Button>
+        <Dialog open={isAddMealOpen} onOpenChange={setIsAddMealOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm">
+              <Plus size={16} className="mr-2" />
+              Add Food
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Food</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label>Meal Type</Label>
+                <Select value={mealForm.type} onValueChange={(value: MealEntry['type']) => setMealForm(prev => ({ ...prev, type: value }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="breakfast">🍳 Breakfast</SelectItem>
+                    <SelectItem value="lunch">🥗 Lunch</SelectItem>
+                    <SelectItem value="dinner">🍽️ Dinner</SelectItem>
+                    <SelectItem value="snack">🍎 Snack</SelectItem>
+                    <SelectItem value="drink">🥤 Drink</SelectItem>
+                    <SelectItem value="other">🍴 Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Food Name</Label>
+                <Input
+                  value={mealForm.name}
+                  onChange={(e) => setMealForm(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="e.g., Grilled chicken salad"
+                />
+              </div>
+              <div>
+                <Label>Calories</Label>
+                <Input
+                  type="number"
+                  value={mealForm.calories}
+                  onChange={(e) => setMealForm(prev => ({ ...prev, calories: e.target.value }))}
+                  placeholder="e.g., 350"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsAddMealOpen(false)}>Cancel</Button>
+              <Button onClick={handleAddMeal} disabled={!mealForm.name.trim() || !mealForm.calories}>Add Meal</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {/* Daily Overview */}
       <Card className="mobile-card mb-6">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Target size={20} />
-            Daily Goals
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Calories */}
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-medium">Calories</span>
-              <span className="text-sm text-muted-foreground">
-                {consumed.calories} / {dailyTargets.calories}
-              </span>
-            </div>
-            <Progress value={calorieProgress} className="h-3" />
-            <div className="text-xs text-muted-foreground mt-1">
-              {dailyTargets.calories - consumed.calories} remaining
-            </div>
+        <CardHeader><CardTitle className="flex items-center gap-2"><Apple size={20} />Today's Goals</CardTitle></CardHeader>
+        <CardContent>
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm font-medium">Calories</span>
+            <span className="text-sm text-muted-foreground">{todayCalories} / {calorieTarget}</span>
           </div>
-
-          {/* Macros */}
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <div className="text-xs text-muted-foreground mb-1">Protein</div>
-              <div className="font-semibold text-sm">{consumed.protein}g</div>
-              <Progress value={proteinProgress} className="h-2 mt-1" />
-            </div>
-            <div>
-              <div className="text-xs text-muted-foreground mb-1">Carbs</div>
-              <div className="font-semibold text-sm">{consumed.carbs}g</div>
-              <Progress value={carbProgress} className="h-2 mt-1" />
-            </div>
-            <div>
-              <div className="text-xs text-muted-foreground mb-1">Fat</div>
-              <div className="font-semibold text-sm">{consumed.fat}g</div>
-              <Progress value={fatProgress} className="h-2 mt-1" />
-            </div>
-          </div>
+          <Progress value={calorieProgress} className="h-3" />
+          {todayCalories === 0 && <p className="text-xs text-muted-foreground mt-1">No meals logged yet today</p>}
         </CardContent>
       </Card>
 
-      {/* Meals */}
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-4">Today's Meals</h2>
-        <div className="space-y-3">
-          {meals.map((meal) => {
-            const IconComponent = getMealIcon(meal.name);
-            return (
-              <Card key={meal.id} className="mobile-card">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        <IconComponent size={18} className="text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground">{meal.name}</h3>
-                        <p className="text-xs text-muted-foreground">{meal.time}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold text-sm">{meal.calories} cal</div>
+      <Card className="mobile-card mb-6">
+        <CardHeader><CardTitle className="flex items-center gap-2"><Clock size={20} />Today's Meals</CardTitle></CardHeader>
+        <CardContent>
+          {todayMeals.length === 0 ? (
+            <div className="text-center py-8">
+              <Apple className="mx-auto mb-4 text-muted-foreground" size={48} />
+              <p className="text-muted-foreground mb-4">No meals logged yet</p>
+              <Button onClick={() => setIsAddMealOpen(true)}><Plus size={16} className="mr-2" />Add Your First Meal</Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {todayMeals.map((meal, index) => (
+                <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">{getMealIcon(meal.type)}</span>
+                    <div>
+                      <p className="font-medium">{meal.name}</p>
+                      <p className="text-sm text-muted-foreground capitalize">{meal.type} • {formatTime(meal.time)}</p>
                     </div>
                   </div>
-                  
-                  <div className="space-y-1">
-                    {meal.items.map((item, index) => (
-                      <div key={index} className="text-sm text-muted-foreground">
-                        • {item}
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
+                  <Badge variant="secondary">{meal.calories} cal</Badge>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-      {/* Weekly Trend */}
       <Card className="mobile-card">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <TrendingUp size={20} />
-            This Week
-          </CardTitle>
-        </CardHeader>
+        <CardHeader><CardTitle className="flex items-center gap-2"><TrendingUp size={20} />Weekly Trend</CardTitle></CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">2,150</div>
-              <div className="text-sm text-muted-foreground">Avg Calories</div>
+              <p className="text-2xl font-bold text-foreground">{weeklyStats.avg}</p>
+              <p className="text-sm text-muted-foreground">Avg Calories</p>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">92%</div>
-              <div className="text-sm text-muted-foreground">Goal Hit Rate</div>
+              <p className="text-2xl font-bold text-foreground">{weeklyStats.goalHitRate}%</p>
+              <p className="text-sm text-muted-foreground">Goal Hit Rate</p>
             </div>
           </div>
         </CardContent>
