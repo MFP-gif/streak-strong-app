@@ -5,8 +5,12 @@ export interface Session {
   routineId: string | null;
   routineName: string;
   date: string;
+  start: string;
+  end: string;
   duration: number;
   exercises: any[];
+  totalReps: number;
+  totalVolumeKg: number;
   isQuickSession?: boolean;
 }
 
@@ -37,14 +41,45 @@ export interface CaloriesByDate {
   };
 }
 
+export interface SessionSet {
+  exerciseId: string;
+  exerciseName: string;
+  muscle: string;
+  weightKg: number;
+  reps: number;
+}
+
 export interface Measurement {
   date: string;
-  weight?: number;
+  weightKg?: number;
   chest?: number;
   waist?: number;
   arms?: number;
   thighs?: number;
   bodyFat?: number;
+}
+
+export interface UserProfile {
+  name?: string;
+  bio?: string;
+  link?: string;
+  sex?: 'male' | 'female' | 'other' | null;
+  birthday?: string | null;
+}
+
+export interface Preferences {
+  units: 'kg' | 'lb';
+  language: 'en' | 'pt';
+  privateProfile: boolean;
+  hideSuggested: boolean;
+  defaultWorkoutVisibility: 'private' | 'friends' | 'public';
+}
+
+export interface ProgressPhoto {
+  id: string;
+  date: string;
+  caption?: string;
+  dataUrl: string;
 }
 
 export interface UserStats {
@@ -53,3 +88,5 @@ export interface UserStats {
 }
 
 export type Theme = 'light' | 'dark';
+export type ChartMetric = 'duration' | 'volume' | 'reps';
+export type TimeWindow = 'week' | 'month' | '3m' | '6m' | 'year';

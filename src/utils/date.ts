@@ -13,6 +13,41 @@ export const isToday = (key: string): boolean => {
   return key === dateKey();
 };
 
+export const startOfWeek = (date: Date, weekStartsOn: number = 1): Date => {
+  const result = new Date(date);
+  const day = result.getDay();
+  const diff = (day < weekStartsOn ? 7 : 0) + day - weekStartsOn;
+  result.setDate(result.getDate() - diff);
+  result.setHours(0, 0, 0, 0);
+  return result;
+};
+
+export const isSameWeek = (aKey: string, bKey: string, weekStartsOn: number = 1): boolean => {
+  const dateA = new Date(aKey);
+  const dateB = new Date(bKey);
+  const startA = startOfWeek(dateA, weekStartsOn);
+  const startB = startOfWeek(dateB, weekStartsOn);
+  return startA.getTime() === startB.getTime();
+};
+
+export const rangeOfWeeks = (back: number): Array<[string, string]> => {
+  const ranges: Array<[string, string]> = [];
+  const now = new Date();
+  
+  for (let i = 0; i < back; i++) {
+    const weekStart = new Date(now);
+    weekStart.setDate(weekStart.getDate() - (i * 7));
+    const start = startOfWeek(weekStart);
+    
+    const end = new Date(start);
+    end.setDate(end.getDate() + 6);
+    
+    ranges.push([dateKey(start), dateKey(end)]);
+  }
+  
+  return ranges;
+};
+
 export const daysBetweenKeys = (startKey: string, endKey: string): number => {
   const start = new Date(startKey);
   const end = new Date(endKey);
@@ -45,9 +80,11 @@ export const formatTime = (dateStr: string): string => {
 
 export const getWeekDays = (endDate: Date = new Date(), count: number = 7): string[] => {
   const days: string[] = [];
-  for (let i = count - 1; i >= 0; i--) {
-    const date = new Date(endDate);
-    date.setDate(date.getDate() - i);
+  const start = startOfWeek(endDate);
+  
+  for (let i = 0; i < count; i++) {
+    const date = new Date(start);
+    date.setDate(date.getDate() + i);
     days.push(dateKey(date));
   }
   return days;
