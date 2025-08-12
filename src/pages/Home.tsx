@@ -135,6 +135,7 @@ export const Home = () => {
     if (!weightForm.date || !weightForm.weight) return;
     
     const newMeasurement = { 
+      id: `measurement_${Date.now()}`,
       date: weightForm.date, 
       weightKg: parseFloat(weightForm.weight) 
     };

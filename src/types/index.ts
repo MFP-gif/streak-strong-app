@@ -50,6 +50,7 @@ export interface SessionSet {
 }
 
 export interface Measurement {
+  id: string;
   date: string;
   weightKg?: number;
   chest?: number;

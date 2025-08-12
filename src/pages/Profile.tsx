@@ -69,6 +69,7 @@ export const Profile = () => {
     if (!measurementForm.date) return;
     
     const newMeasurement: Measurement = {
+      id: `measurement_${Date.now()}`,
       date: measurementForm.date,
       ...(measurementForm.weightKg && { weightKg: parseFloat(measurementForm.weightKg) }),
       ...(measurementForm.chest && { chest: parseFloat(measurementForm.chest) }),
@@ -277,19 +278,19 @@ export const Profile = () => {
             </DialogContent>
           </Dialog>
 
-          <Button variant="outline" className="h-16 flex-col gap-1">
+          <Button variant="outline" className="h-16 flex-col gap-1" onClick={() => navigate('/profile/calendar')}>
             <Calendar size={20} />
             <span className="text-xs">Calendar</span>
           </Button>
 
-          <Button variant="outline" className="h-16 flex-col gap-1">
+          <Button variant="outline" className="h-16 flex-col gap-1" onClick={() => navigate('/profile/statistics')}>
             <TrendingUp size={20} />
             <span className="text-xs">Statistics</span>
           </Button>
 
-          <Button variant="outline" className="h-16 flex-col gap-1">
-            <Dumbbell size={20} />
-            <span className="text-xs">Muscle Dist.</span>
+          <Button variant="outline" className="h-16 flex-col gap-1" onClick={() => navigate('/profile/progress-photos')}>
+            <Camera size={20} />
+            <span className="text-xs">Progress Photos</span>
           </Button>
 
           <Dialog open={isPhotoPickerOpen} onOpenChange={setIsPhotoPickerOpen}>

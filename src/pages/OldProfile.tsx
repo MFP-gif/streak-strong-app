@@ -43,17 +43,17 @@ export const Profile = () => {
 
   const handleLogMeasurement = () => {
     if (!measurementForm.date || !measurementForm.weight) return;
-    const newMeasurement = { date: measurementForm.date, weight: parseFloat(measurementForm.weight) };
+    const newMeasurement = { id: `measurement_${Date.now()}`, date: measurementForm.date, weightKg: parseFloat(measurementForm.weight) };
     const updatedMeasurements = [newMeasurement, ...measurements];
     setMeasurements(updatedMeasurements);
     localStorage.setItem('measurements', JSON.stringify(updatedMeasurements));
-    toast({ title: "Measurement logged", description: `Weight recorded: ${newMeasurement.weight} kg` });
+    toast({ title: "Measurement logged", description: `Weight recorded: ${newMeasurement.weightKg} kg` });
     setMeasurementForm({ date: dateKey(), weight: '' });
     setIsLogMeasurementOpen(false);
   };
 
   const stats = recalcWorkoutStreak(sessions);
-  const latestWeight = measurements.find(m => m.weight)?.weight;
+  const latestWeight = measurements.find(m => m.weightKg)?.weightKg;
 
   return (
     <div className="min-h-screen bg-background pb-20 pt-4 px-4">

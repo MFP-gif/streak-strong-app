@@ -85,7 +85,7 @@ export const Nutrition = () => {
   };
 
   const calorieProgress = calorieTarget > 0 ? (todayCalories / calorieTarget) * 100 : 0;
-  const weeklyStats = weeklyCalories(caloriesByDate);
+  const weeklyStats = weeklyCalories(caloriesByDate, calorieTarget);
 
   return (
     <div className="min-h-screen bg-background pb-20 pt-4 px-4">
