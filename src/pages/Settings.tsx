@@ -24,8 +24,8 @@ export const Settings = () => {
       items: [
         { title: "Profile", path: "/settings/profile" },
         { title: "Account", path: "/settings/account" },
-        { title: "Manage Subscription", path: "/settings/subscription" },
-        { title: "Notifications", path: "/settings/notifications" },
+        { title: "Manage Subscription (Coming soon)", path: "" },
+        { title: "Notifications (Coming soon)", path: "" },
       ]
     },
     {
@@ -33,14 +33,11 @@ export const Settings = () => {
       title: "Preferences",
       icon: <Lock size={20} />,
       items: [
-        { title: "Workouts", path: "/settings/workouts" },
+        { title: "Workouts (Coming soon)", path: "" },
         { title: "Privacy & Social", path: "/settings/privacy" },
-        { title: "Units", path: "/settings/units" },
-        { title: "Language", path: "/settings/language" },
-        { title: "Apple Health", path: "/settings/apple-health" },
-        { title: "Integrations", path: "/settings/integrations" },
-        { title: "Theme", path: "/settings/theme" },
-        { title: "Export & Import Data", path: "/settings/data" },
+        { title: "Apple Health (Coming soon)", path: "" },
+        { title: "Integrations (Coming soon)", path: "" },
+        { title: "Export & Import Data (Coming soon)", path: "" },
       ]
     }
   ];
@@ -61,13 +58,6 @@ export const Settings = () => {
             </Button>
             <h1 className="text-xl font-semibold">Settings</h1>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="text-blue-600 border-blue-600 hover:bg-blue-50"
-          >
-            Unlock
-          </Button>
         </div>
       </div>
 
@@ -87,16 +77,21 @@ export const Settings = () => {
             <div className="bg-card rounded-lg border">
               {section.items.map((item, index) => (
                 <button
-                  key={item.path}
-                  onClick={() => navigate(item.path)}
+                  key={item.path || item.title}
+                  onClick={() => item.path && navigate(item.path)}
+                  disabled={!item.path}
                   className={`
                     w-full flex items-center justify-between px-4 py-4 text-left
-                    hover:bg-muted/50 transition-colors
+                    transition-colors
+                    ${!item.path 
+                      ? 'text-muted-foreground cursor-not-allowed' 
+                      : 'hover:bg-muted/50'
+                    }
                     ${index !== section.items.length - 1 ? 'border-b border-border' : ''}
                   `}
                 >
                   <span className="font-medium">{item.title}</span>
-                  <ChevronRight size={16} className="text-muted-foreground" />
+                  {item.path && <ChevronRight size={16} className="text-muted-foreground" />}
                 </button>
               ))}
             </div>

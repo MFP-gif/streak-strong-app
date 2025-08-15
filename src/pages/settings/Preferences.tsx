@@ -90,69 +90,14 @@ export const PreferencesSettings = () => {
 
       {/* Content */}
       <div className="px-4 py-6 space-y-8">
-        {/* Privacy & Social */}
+        {/* Units */}
         <div className="space-y-4">
           <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-            Privacy & Social
+            Units
           </h2>
           
           <div className="bg-card rounded-lg border">
-            <div className="flex items-center justify-between px-4 py-4 border-b border-border">
-              <div>
-                <Label className="font-medium">Private Profile</Label>
-                <p className="text-sm text-muted-foreground">
-                  Hide your profile from other users
-                </p>
-              </div>
-              <Switch
-                checked={formData.privateProfile}
-                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, privateProfile: checked }))}
-              />
-            </div>
-            
-            <div className="flex items-center justify-between px-4 py-4 border-b border-border">
-              <div>
-                <Label className="font-medium">Hide Suggested</Label>
-                <p className="text-sm text-muted-foreground">
-                  Don't show suggested users
-                </p>
-              </div>
-              <Switch
-                checked={formData.hideSuggested}
-                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, hideSuggested: checked }))}
-              />
-            </div>
-            
             <div className="px-4 py-4">
-              <Label className="font-medium block mb-2">Default Workout Visibility</Label>
-              <p className="text-sm text-muted-foreground mb-3">
-                Choose who can see your workouts by default
-              </p>
-              <Select
-                value={formData.defaultWorkoutVisibility}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, defaultWorkoutVisibility: value as any }))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="private">Private</SelectItem>
-                  <SelectItem value="friends">Friends Only</SelectItem>
-                  <SelectItem value="public">Public</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-
-        {/* Units & Display */}
-        <div className="space-y-4">
-          <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-            Units & Display
-          </h2>
-          
-          <div className="bg-card rounded-lg border">
-            <div className="px-4 py-4 border-b border-border">
               <Label className="font-medium block mb-2">Weight Units</Label>
               <p className="text-sm text-muted-foreground mb-3">
                 Choose your preferred weight measurement
@@ -170,9 +115,18 @@ export const PreferencesSettings = () => {
                 </SelectContent>
               </Select>
             </div>
-            
-            <div className="px-4 py-4 border-b border-border">
-              <Label className="font-medium block mb-2">Language</Label>
+          </div>
+        </div>
+
+        {/* Language */}
+        <div className="space-y-4">
+          <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            Language
+          </h2>
+          
+          <div className="bg-card rounded-lg border">
+            <div className="px-4 py-4">
+              <Label className="font-medium block mb-2">App Language</Label>
               <p className="text-sm text-muted-foreground mb-3">
                 Choose your preferred language
               </p>
@@ -189,7 +143,16 @@ export const PreferencesSettings = () => {
                 </SelectContent>
               </Select>
             </div>
-            
+          </div>
+        </div>
+
+        {/* Theme */}
+        <div className="space-y-4">
+          <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            Theme
+          </h2>
+          
+          <div className="bg-card rounded-lg border">
             <div className="flex items-center justify-between px-4 py-4">
               <div>
                 <Label className="font-medium">Dark Mode</Label>
@@ -204,25 +167,6 @@ export const PreferencesSettings = () => {
                   document.documentElement.classList.toggle('dark', checked);
                 }}
               />
-            </div>
-          </div>
-        </div>
-
-        {/* Integrations */}
-        <div className="space-y-4">
-          <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-            Integrations
-          </h2>
-          
-          <div className="bg-card rounded-lg border">
-            <div className="px-4 py-4">
-              <Label className="font-medium block mb-2">Apple Health</Label>
-              <p className="text-sm text-muted-foreground mb-3">
-                Sync your workouts with Apple Health
-              </p>
-              <Button variant="outline" className="w-full" disabled>
-                Connect Apple Health (Coming Soon)
-              </Button>
             </div>
           </div>
         </div>
