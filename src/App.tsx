@@ -13,6 +13,9 @@ import { Profile } from "./pages/Profile";
 import { Onboarding } from "./pages/Onboarding";
 import { SessionSummary } from "./pages/SessionSummary";
 import { Settings } from "./pages/Settings";
+import { AccountSettings } from "./pages/settings/Account";
+import { PreferencesSettings } from "./pages/settings/Preferences";
+import { AboutDiscipra } from "./pages/AboutDiscipra";
 import { MobileNavigation } from "./components/MobileNavigation";
 import { useEffect, useState } from "react";
 import NotFound from "./pages/NotFound";
@@ -59,6 +62,11 @@ const App = () => {
                 <Route path="/habits" element={<Habits />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/settings/account" element={<AccountSettings />} />
+                <Route path="/settings/profile" element={<AccountSettings />} />
+                <Route path="/settings/privacy" element={<PreferencesSettings />} />
+                <Route path="/settings/preferences" element={<PreferencesSettings />} />
+                <Route path="/about" element={<AboutDiscipra />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
