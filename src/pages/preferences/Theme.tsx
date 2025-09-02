@@ -87,7 +87,7 @@ export const Theme = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => navigate('/settings')}
+              onClick={() => navigate(-1)}
               className="p-2"
             >
               <ArrowLeft size={20} />

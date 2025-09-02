@@ -2,7 +2,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Home, Dumbbell, Apple, CheckCircle, User } from "lucide-react";
 
 const tabs = [
-  { path: "/", icon: Home, label: "Home" },
+  { path: "/home", icon: Home, label: "Home" },
   { path: "/workout", icon: Dumbbell, label: "Workout" },
   { path: "/nutrition", icon: Apple, label: "Nutrition" },
   { path: "/habits", icon: CheckCircle, label: "Habits" },
@@ -16,7 +16,7 @@ export const MobileNavigation = () => {
     <nav className="tab-bar">
       <div className="flex">
         {tabs.map(({ path, icon: Icon, label }) => {
-          const isActive = location.pathname === path;
+          const isActive = location.pathname === path || (path === "/home" && location.pathname === "/");
           return (
             <NavLink
               key={path}

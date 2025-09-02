@@ -114,11 +114,22 @@ export const Profile = () => {
   };
 
   const handleAvatarChange = () => {
-    // TODO: Implement camera roll / take photo functionality
-    toast({
-      title: "Feature coming soon",
-      description: "Avatar upload will be available soon"
-    });
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataUrl = e.target?.result as string;
+          setFormData(prev => ({ ...prev, avatar: dataUrl }));
+          toast({ title: "Avatar updated", description: "Your profile picture has been changed" });
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
   };
 
   const handleNavigateAway = () => {
@@ -126,7 +137,7 @@ export const Profile = () => {
       const confirmed = window.confirm("You have unsaved changes. Are you sure you want to leave?");
       if (!confirmed) return;
     }
-    navigate('/settings');
+    navigate(-1);
   };
 
   return (
@@ -251,33 +262,24 @@ export const Profile = () => {
 
             <div>
               <Label htmlFor="birthday">Birthday</Label>
-              <Select 
-                value={formData.birthday || ''} 
-                onValueChange={(value) => setFormData(prev => ({ ...prev, birthday: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue>
-                    <span className="text-primary">Select</span>
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {/* TODO: Implement proper date picker */}
-                  <SelectItem value="1990-01-01">January 1, 1990</SelectItem>
-                  <SelectItem value="1995-01-01">January 1, 1995</SelectItem>
-                  <SelectItem value="2000-01-01">January 1, 2000</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                id="birthday"
+                type="date"
+                value={formData.birthday || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, birthday: e.target.value }))}
+                max={new Date(new Date().setFullYear(new Date().getFullYear() - 13)).toISOString().split('T')[0]}
+              />
             </div>
           </div>
         </div>
 
         {/* Sticky Save Button */}
         {isDirty && (
-          <div className="fixed bottom-4 left-4 right-4">
+          <div className="fixed bottom-20 left-4 right-4 z-[60] pb-safe">
             <Button 
               onClick={handleSave}
               disabled={isSaving}
-              className="w-full"
+              className="w-full shadow-lg"
               size="lg"
             >
               {isSaving ? 'Saving...' : 'Save Changes'}

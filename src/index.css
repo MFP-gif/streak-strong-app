@@ -144,10 +144,21 @@ All colors MUST be HSL. Neutral palette with blue accents and streak indicators.
     scroll-behavior: smooth;
   }
 
-  /* Mobile touch improvements */
-  button, [role="button"] {
-    @apply touch-manipulation;
-  }
+    /* Mobile touch improvements */
+    button, [role="button"] {
+      @apply touch-manipulation;
+      /* Prevent double tap to zoom on buttons */
+      touch-action: manipulation;
+    }
+    
+    /* Safe area insets for mobile devices */
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    .pt-safe {
+      padding-top: env(safe-area-inset-top);
+    }
 }
 
 @layer components {
@@ -167,7 +178,7 @@ All colors MUST be HSL. Neutral palette with blue accents and streak indicators.
   /* Bottom navigation styles */
   .tab-bar {
     @apply fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md 
-           border-t border-border/60 px-2 py-1 z-50
+           border-t border-border/60 px-2 py-1 z-40
            shadow-[0_-8px_30px_-8px_hsl(240_10%_15%_/_0.1)];
   }
 
