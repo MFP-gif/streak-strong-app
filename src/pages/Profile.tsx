@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { 
-  BarChart3, Calendar, Scale, TrendingUp, Settings,
+  BarChart3, Calendar, Scale, TrendingUp, Camera, Settings,
   ChevronDown, ChevronRight, Dumbbell
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { dateKey } from "@/utils/date";
 import { workoutStreak, aggregateSessions, muscleDistribution } from "@/utils/stats";
 import { toDisplayWeight, getWeightUnit } from "@/utils/units";
-import type { Session, SessionSet, Measurement, Preferences, ChartMetric, TimeWindow } from "@/types";
+import type { Session, SessionSet, Measurement, Preferences, ProgressPhoto, ChartMetric, TimeWindow } from "@/types";
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -24,6 +24,7 @@ export const Profile = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [sessionSets, setSessionSets] = useState<{ [sessionId: string]: SessionSet[] }>({});
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
+  const [photos, setPhotos] = useState<ProgressPhoto[]>([]);
   const [preferences, setPreferences] = useState<Preferences>({
     units: 'kg',
     language: 'en',
@@ -35,6 +36,7 @@ export const Profile = () => {
   const [chartMetric, setChartMetric] = useState<ChartMetric>('duration');
   const [timeWindow, setTimeWindow] = useState<TimeWindow>('month');
   const [isLogMeasurementOpen, setIsLogMeasurementOpen] = useState(false);
+  const [isPhotoPickerOpen, setIsPhotoPickerOpen] = useState(false);
   const [measurementForm, setMeasurementForm] = useState({ 
     date: dateKey(), 
     weightKg: '', 
@@ -53,11 +55,13 @@ export const Profile = () => {
     const sessionsData = JSON.parse(localStorage.getItem('sessions') || '[]');
     const sessionSetsData = JSON.parse(localStorage.getItem('sessionSets') || '{}');
     const measurementsData = JSON.parse(localStorage.getItem('measurements') || '[]');
+    const photosData = JSON.parse(localStorage.getItem('photos') || '[]');
     const preferencesData = JSON.parse(localStorage.getItem('preferences') || JSON.stringify(preferences));
     
     setSessions(sessionsData);
     setSessionSets(sessionSetsData);
     setMeasurements(measurementsData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+    setPhotos(photosData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()));
     setPreferences(preferencesData);
   };
 
@@ -82,6 +86,30 @@ export const Profile = () => {
     toast({ title: "Measurement logged", description: "Your measurement has been recorded" });
     setMeasurementForm({ date: dateKey(), weightKg: '', chest: '', waist: '', arms: '', thighs: '', bodyFat: '' });
     setIsLogMeasurementOpen(false);
+  };
+
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      const newPhoto: ProgressPhoto = {
+        id: Date.now().toString(),
+        date: new Date().toISOString(),
+        dataUrl,
+        caption: ''
+      };
+      
+      const updatedPhotos = [newPhoto, ...photos];
+      setPhotos(updatedPhotos);
+      localStorage.setItem('photos', JSON.stringify(updatedPhotos));
+      
+      toast({ title: "Photo added", description: "Your progress photo has been saved" });
+    };
+    reader.readAsDataURL(file);
+    setIsPhotoPickerOpen(false);
   };
 
   const stats = workoutStreak(sessions);
@@ -259,6 +287,39 @@ export const Profile = () => {
             <TrendingUp size={20} />
             <span className="text-xs">Statistics</span>
           </Button>
+
+          <Dialog open={isPhotoPickerOpen} onOpenChange={setIsPhotoPickerOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="h-16 flex-col gap-1">
+                <Camera size={20} />
+                <span className="text-xs">Progress Photos</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Progress Photo</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handlePhotoUpload}
+                />
+                {photos.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto">
+                    {photos.slice(0, 6).map((photo) => (
+                      <img
+                        key={photo.id}
+                        src={photo.dataUrl}
+                        alt="Progress"
+                        className="w-full h-20 object-cover rounded"
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
 
