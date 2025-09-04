@@ -178,8 +178,13 @@ All colors MUST be HSL. Neutral palette with blue accents and streak indicators.
   /* Bottom navigation styles */
   .tab-bar {
     @apply fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md 
-           border-t border-border/60 px-2 py-1 z-40
+           border-t border-border/60 px-2 py-1 z-40 h-20
            shadow-[0_-8px_30px_-8px_hsl(240_10%_15%_/_0.1)];
+  }
+
+  /* Action bar positioning above tab bar */
+  .action-bar-mobile {
+    @apply fixed bottom-24 left-4 right-4 z-50;
   }
 
   .tab-item {

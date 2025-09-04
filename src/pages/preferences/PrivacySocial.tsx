@@ -148,21 +148,23 @@ export const PrivacySocial = () => {
 
         {/* Save/Cancel Buttons */}
         {hasChanges && (
-          <div className="fixed bottom-4 left-4 right-4 flex gap-3 bg-background p-4 border rounded-lg shadow-lg">
-            <Button 
-              variant="outline" 
-              onClick={handleCancel}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleSave}
-              disabled={isSaving}
-              className="flex-1"
-            >
-              {isSaving ? 'Saving...' : 'Save Changes'}
-            </Button>
+          <div className="action-bar-mobile">
+            <div className="flex gap-3 bg-background p-4 border rounded-lg shadow-lg">
+              <Button 
+                variant="outline" 
+                onClick={handleCancel}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSave}
+                disabled={isSaving}
+                className="flex-1"
+              >
+                {isSaving ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
           </div>
         )}
       </div>

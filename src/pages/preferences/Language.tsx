@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 interface LanguageData {
-  language: 'en' | 'pt';
+  language: 'en' | 'pt' | 'it';
 }
 
 export const Language = () => {
@@ -94,6 +94,7 @@ export const Language = () => {
               <SelectContent>
                 <SelectItem value="en">English</SelectItem>
                 <SelectItem value="pt">Português</SelectItem>
+                <SelectItem value="it">Italiano</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -101,21 +102,23 @@ export const Language = () => {
 
         {/* Save/Cancel Buttons */}
         {hasChanges && (
-          <div className="fixed bottom-4 left-4 right-4 flex gap-3 bg-background p-4 border rounded-lg shadow-lg">
-            <Button 
-              variant="outline" 
-              onClick={handleCancel}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleSave}
-              disabled={isSaving}
-              className="flex-1"
-            >
-              {isSaving ? 'Saving...' : 'Save Changes'}
-            </Button>
+          <div className="action-bar-mobile">
+            <div className="flex gap-3 bg-background p-4 border rounded-lg shadow-lg">
+              <Button 
+                variant="outline" 
+                onClick={handleCancel}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSave}
+                disabled={isSaving}
+                className="flex-1"
+              >
+                {isSaving ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
           </div>
         )}
       </div>

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 interface ThemeData {
-  theme: 'light' | 'dark' | 'system';
+  theme: 'light' | 'dark';
 }
 
 export const Theme = () => {
@@ -15,16 +15,16 @@ export const Theme = () => {
   const { toast } = useToast();
   
   const [formData, setFormData] = useState<ThemeData>({
-    theme: 'system'
+    theme: 'light'
   });
   const [originalData, setOriginalData] = useState<ThemeData>({
-    theme: 'system'
+    theme: 'light'
   });
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    const currentTheme = savedTheme || 'system';
+    const currentTheme = savedTheme || 'light';
     
     setFormData({ theme: currentTheme });
     setOriginalData({ theme: currentTheme });
@@ -32,16 +32,11 @@ export const Theme = () => {
 
   const hasChanges = JSON.stringify(formData) !== JSON.stringify(originalData);
 
-  const applyTheme = (theme: 'light' | 'dark' | 'system') => {
-    if (theme === 'system') {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.classList.toggle('dark', isDark);
-    } else {
-      document.documentElement.classList.toggle('dark', theme === 'dark');
-    }
+  const applyTheme = (theme: 'light' | 'dark') => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
   };
 
-  const handleThemeChange = (theme: 'light' | 'dark' | 'system') => {
+  const handleThemeChange = (theme: 'light' | 'dark') => {
     setFormData({ theme });
     applyTheme(theme);
   };
@@ -49,12 +44,7 @@ export const Theme = () => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      if (formData.theme === 'system') {
-        localStorage.removeItem('theme');
-      } else {
-        localStorage.setItem('theme', formData.theme);
-      }
-      
+      localStorage.setItem('theme', formData.theme);
       setOriginalData(formData);
       
       toast({ 
@@ -115,7 +105,6 @@ export const Theme = () => {
               <SelectContent>
                 <SelectItem value="light">Light</SelectItem>
                 <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -123,21 +112,23 @@ export const Theme = () => {
 
         {/* Save/Cancel Buttons */}
         {hasChanges && (
-          <div className="fixed bottom-4 left-4 right-4 flex gap-3 bg-background p-4 border rounded-lg shadow-lg">
-            <Button 
-              variant="outline" 
-              onClick={handleCancel}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleSave}
-              disabled={isSaving}
-              className="flex-1"
-            >
-              {isSaving ? 'Saving...' : 'Save Changes'}
-            </Button>
+          <div className="action-bar-mobile">
+            <div className="flex gap-3 bg-background p-4 border rounded-lg shadow-lg">
+              <Button 
+                variant="outline" 
+                onClick={handleCancel}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSave}
+                disabled={isSaving}
+                className="flex-1"
+              >
+                {isSaving ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
           </div>
         )}
       </div>

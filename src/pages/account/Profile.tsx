@@ -273,13 +273,16 @@ export const Profile = () => {
           </div>
         </div>
 
+        {/* Add bottom padding to prevent content being cut off */}
+        <div className="pb-32"></div>
+
         {/* Sticky Save Button */}
         {isDirty && (
-          <div className="fixed bottom-20 left-4 right-4 z-[60] pb-safe">
+          <div className="action-bar-mobile">
             <Button 
               onClick={handleSave}
               disabled={isSaving}
-              className="w-full shadow-lg"
+              className="w-full shadow-lg bg-primary hover:bg-primary/90"
               size="lg"
             >
               {isSaving ? 'Saving...' : 'Save Changes'}
