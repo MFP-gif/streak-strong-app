@@ -267,7 +267,7 @@ export const Profile = () => {
                 type="date"
                 value={formData.birthday || ''}
                 onChange={(e) => setFormData(prev => ({ ...prev, birthday: e.target.value }))}
-                max={new Date(new Date().setFullYear(new Date().getFullYear() - 13)).toISOString().split('T')[0]}
+                min="1925-01-01"
               />
             </div>
           </div>
