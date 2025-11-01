@@ -91,25 +91,6 @@ export const WorkoutSettings = () => {
           ))}
         </div>
 
-        {/* Warm-up Calculator (PRO) */}
-        <div className="bg-card rounded-lg border">
-          <div className="flex items-center justify-between px-4 py-4">
-            <span className="font-medium">Warm-up Calculator</span>
-            <span className="px-3 py-1 text-xs font-semibold bg-yellow-500 text-black rounded">PRO</span>
-          </div>
-        </div>
-
-        {/* Warm-up Sets */}
-        <div className="bg-card rounded-lg border">
-          <button
-            onClick={() => navigate('/preferences/workout-settings/warmup-sets')}
-            className="w-full flex items-center justify-between px-4 py-4 text-left transition-colors hover:bg-muted/50"
-          >
-            <span className="font-medium">Warm-up Sets</span>
-            <ChevronRight size={16} className="text-muted-foreground" />
-          </button>
-        </div>
-
         {/* Toggle Settings */}
         <div className="bg-card rounded-lg border">
           {/* Keep Awake During Workout */}
