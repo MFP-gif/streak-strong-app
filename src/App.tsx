@@ -28,6 +28,14 @@ import { Units } from "./pages/preferences/Units";
 import { Language } from "./pages/preferences/Language";
 import { Theme } from "./pages/preferences/Theme";
 import { WorkoutSettings } from "./pages/preferences/WorkoutSettings";
+import { Sounds } from "./pages/preferences/workout-settings/Sounds";
+import { TimerSound } from "./pages/preferences/workout-settings/TimerSound";
+import { TimerVolume } from "./pages/preferences/workout-settings/TimerVolume";
+import { CheckSetVolume } from "./pages/preferences/workout-settings/CheckSetVolume";
+import { LivePRVolume } from "./pages/preferences/workout-settings/LivePRVolume";
+import { PreviousWorkoutValues } from "./pages/preferences/workout-settings/PreviousWorkoutValues";
+import { FirstDayOfWeek } from "./pages/preferences/workout-settings/FirstDayOfWeek";
+import { RestTimer } from "./pages/preferences/workout-settings/RestTimer";
 import { Integrations } from "./pages/preferences/Integrations";
 import { AboutDiscipra } from "./pages/AboutDiscipra";
 
@@ -61,7 +69,15 @@ function App() {
             <Route path="/preferences/units" element={<Units />} />
             <Route path="/preferences/language" element={<Language />} />
             <Route path="/preferences/theme" element={<Theme />} />
-            <Route path="/preferences/workout-settings" element={<WorkoutSettings />} />
+          <Route path="/preferences/workout-settings" element={<WorkoutSettings />} />
+          <Route path="/preferences/workout-settings/sounds" element={<Sounds />} />
+          <Route path="/preferences/workout-settings/sounds/timer-sound" element={<TimerSound />} />
+          <Route path="/preferences/workout-settings/sounds/timer-volume" element={<TimerVolume />} />
+          <Route path="/preferences/workout-settings/sounds/check-set" element={<CheckSetVolume />} />
+          <Route path="/preferences/workout-settings/sounds/live-pr-volume" element={<LivePRVolume />} />
+          <Route path="/preferences/workout-settings/rest-timer" element={<RestTimer />} />
+          <Route path="/preferences/workout-settings/first-day" element={<FirstDayOfWeek />} />
+          <Route path="/preferences/workout-settings/previous-values" element={<PreviousWorkoutValues />} />
             <Route path="/preferences/integrations" element={<Integrations />} />
             <Route path="/about" element={<AboutDiscipra />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

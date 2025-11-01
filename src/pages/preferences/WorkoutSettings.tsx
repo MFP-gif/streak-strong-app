@@ -40,11 +40,29 @@ export const WorkoutSettings = () => {
     toast.success("Setting updated");
   };
 
+  const [menuSettings, setMenuSettings] = useState({
+    defaultRestTimer: "Off",
+    firstDayOfWeek: "Sunday",
+    previousWorkoutValues: "Any workout"
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem('workoutSettings');
+    if (saved) {
+      const settings = JSON.parse(saved);
+      setMenuSettings({
+        defaultRestTimer: settings.defaultRestTimer || "Off",
+        firstDayOfWeek: settings.firstDayOfWeek || "Sunday",
+        previousWorkoutValues: settings.previousWorkoutValues || "Any workout"
+      });
+    }
+  }, []);
+
   const menuItems = [
-    { title: "Sounds", path: "/preferences/workout-settings/sounds", hasValue: false },
-    { title: "Default Rest Timer", path: "/preferences/workout-settings/rest-timer", value: "Off" },
-    { title: "First day of the week", path: "/preferences/workout-settings/first-day", value: "Sunday" },
-    { title: "Previous Workout Values", path: "/preferences/workout-settings/previous-values", value: "Default" },
+    { title: "Sounds", path: "/preferences/workout-settings/sounds" },
+    { title: "Default Rest Timer", path: "/preferences/workout-settings/rest-timer", value: menuSettings.defaultRestTimer },
+    { title: "First day of the week", path: "/preferences/workout-settings/first-day", value: menuSettings.firstDayOfWeek },
+    { title: "Previous Workout Values", path: "/preferences/workout-settings/previous-values", value: menuSettings.previousWorkoutValues },
   ];
 
   return (
@@ -93,6 +111,21 @@ export const WorkoutSettings = () => {
 
         {/* Toggle Settings */}
         <div className="bg-card rounded-lg border">
+          {/* Live Personal Record Notification - MOVED UP */}
+          <div className="px-4 py-4 border-b border-border">
+            <div className="flex items-center justify-between mb-2">
+              <Label htmlFor="pr-notification" className="font-medium">Live Personal Record Notification</Label>
+              <Switch 
+                id="pr-notification"
+                checked={settings.livePersonalRecordNotification}
+                onCheckedChange={() => handleToggle('livePersonalRecordNotification')}
+              />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              When enabled, it'll notify you when you achieve a Personal Record upon checking the set.
+            </p>
+          </div>
+
           {/* Keep Awake During Workout */}
           <div className="px-4 py-4 border-b border-border">
             <div className="flex items-center justify-between mb-2">
@@ -154,7 +187,7 @@ export const WorkoutSettings = () => {
           </div>
 
           {/* Inline Timer */}
-          <div className="px-4 py-4 border-b border-border">
+          <div className="px-4 py-4">
             <div className="flex items-center justify-between mb-2">
               <Label htmlFor="inline-timer" className="font-medium">Inline Timer</Label>
               <Switch 
@@ -165,21 +198,6 @@ export const WorkoutSettings = () => {
             </div>
             <p className="text-sm text-muted-foreground">
               Duration exercises have a built-in stopwatch for tracking time for each set
-            </p>
-          </div>
-
-          {/* Live Personal Record Notification */}
-          <div className="px-4 py-4">
-            <div className="flex items-center justify-between mb-2">
-              <Label htmlFor="pr-notification" className="font-medium">Live Personal Record Notification</Label>
-              <Switch 
-                id="pr-notification"
-                checked={settings.livePersonalRecordNotification}
-                onCheckedChange={() => handleToggle('livePersonalRecordNotification')}
-              />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              When enabled, it'll notify you when you achieve a Personal Record upon checking the set.
             </p>
           </div>
         </div>
