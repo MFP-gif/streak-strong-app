@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronRight, User, Lock, CreditCard, Bell, Shield, Ruler, Globe, Moon } from "lucide-react";
+import { ArrowLeft, ChevronRight, Lock, CreditCard, Bell, Dumbbell, Plug, Ruler, Globe, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -6,14 +6,14 @@ export const SettingsIndex = () => {
   const navigate = useNavigate();
 
   const accountItems = [
-    { title: "Profile", path: "/account/profile", icon: User },
     { title: "Account Settings", path: "/account/settings", icon: Lock },
     { title: "Manage Subscription", path: "/account/subscription", icon: CreditCard, disabled: true, comingSoon: true },
     { title: "Notifications", path: "/account/notifications", icon: Bell },
   ];
 
   const preferencesItems = [
-    { title: "Privacy & Social", path: "/preferences/privacy-social", icon: Shield },
+    { title: "Workout Settings", path: "/preferences/workout-settings", icon: Dumbbell },
+    { title: "Integrations", path: "/preferences/integrations", icon: Plug },
     { title: "Units", path: "/preferences/units", icon: Ruler },
     { title: "Language", path: "/preferences/language", icon: Globe },
     { title: "Theme", path: "/preferences/theme", icon: Moon },

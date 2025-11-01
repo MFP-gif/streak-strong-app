@@ -27,6 +27,8 @@ import { PrivacySocial } from "./pages/preferences/PrivacySocial";
 import { Units } from "./pages/preferences/Units";
 import { Language } from "./pages/preferences/Language";
 import { Theme } from "./pages/preferences/Theme";
+import { WorkoutSettings } from "./pages/preferences/WorkoutSettings";
+import { Integrations } from "./pages/preferences/Integrations";
 import { AboutDiscipra } from "./pages/AboutDiscipra";
 
 const queryClient = new QueryClient();
@@ -59,6 +61,8 @@ function App() {
             <Route path="/preferences/units" element={<Units />} />
             <Route path="/preferences/language" element={<Language />} />
             <Route path="/preferences/theme" element={<Theme />} />
+            <Route path="/preferences/workout-settings" element={<WorkoutSettings />} />
+            <Route path="/preferences/integrations" element={<Integrations />} />
             <Route path="/about" element={<AboutDiscipra />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
